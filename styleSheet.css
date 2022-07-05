@@ -1,0 +1,30 @@
+QWidget {
+    background: rgb(25, 25, 25);
+}
+
+QLabel {
+    color: white;
+}
+
+QMenuBar {
+    background: rgb(51, 51, 51);
+    color: white;
+}
+
+QMenu {
+    background: #303030;
+    color: white;
+}
+
+QMenu::separator {
+    color: white;
+}
+
+QMenuBar::item:selected {
+    background: rgb(70, 70, 70);
+}
+
+QPushButton {
+    background: rgb(70, 70, 70); 
+    color: white;
+} 

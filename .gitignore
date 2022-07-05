@@ -1,0 +1,12 @@
+.venv
+__pycache__
+.vscode
+ui/ui_*.py
+.qt_for_python
+ui/uic
+audio_test
+
+
+*.mp3
+*.SoundKey
+classes_SoundKey2.html
