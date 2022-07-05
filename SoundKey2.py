@@ -5,8 +5,8 @@ import sys
 import PySide6
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-from keyboard import Keyboard
-from show import Show
+from core.keyboard import Keyboard
+from core.show import Show
 from ui.uic.ui_mainWindow import Ui_MainWindow
 
 

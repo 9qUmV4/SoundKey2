@@ -54,13 +54,13 @@ class KeySettingsDialog(QDialog):
             
         """)
 
+        self._update_path.connect(self.ui.pathDisplay.setText)
 
         self.key = key
         self.path = path
         self.label = label
         
         self.ui.selectFileButton.clicked.connect(self.selectFile)
-        self._update_path.connect(self.ui.pathDisplay.setText)
         self.accepted.connect(self.dialogAccepted)
 
     

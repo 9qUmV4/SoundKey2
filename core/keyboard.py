@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt, QUrl, Signal, Slot
 from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtGui import QMouseEvent, QShortcut, QPalette, QColor
 
-from keySettings import KeySettingsDialog
+from .keySettings import KeySettingsDialog
 
 
 log = logging.getLogger(__name__)
@@ -34,7 +34,6 @@ class KeyButton:
         
         # UI
         self.ui = PushButton(parent)
-
         
         # Audio Output
         self._audioOutput = QAudioOutput()
@@ -56,6 +55,8 @@ class KeyButton:
         self._shortcut.activated.connect(self.togglePlay)
         self.ui.left_duble_click.connect(self._openSettingsDialog)
         self._player.playbackStateChanged.connect(self.ui._updateButtonColor)
+
+        self._can_play = False
 
 
 
@@ -102,6 +103,7 @@ class KeyButton:
     @_can_play.setter
     def _can_play(self, new: bool):
         self.__can_play = new
+        self.ui.setCheckable(new)
         if new: # If button is active
             self.ui.setStyleSheet("""
             QPushButton {
@@ -239,11 +241,6 @@ class PushButton(QPushButton):
         super().__init__(parent)
         
         self.setFocusPolicy(Qt.NoFocus)
-        self.setCheckable(True)
-        self.setStyleSheet("""
-        QPushButton {background:rgb(65,66,66); color: white;} 
-        QPushButton::checked {background:rgb(0, 189, 13); color: white;}
-        """)
 
 
     def _updateButtonColor(self, newState):

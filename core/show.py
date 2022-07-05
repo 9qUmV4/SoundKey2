@@ -12,19 +12,20 @@ from typing import Any
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import Slot
 
-from keyboard import Keyboard
+from .keyboard import Keyboard
 
 
 log = logging.getLogger(__name__)
 
 class Show:
 
-    _path = Path()      # Path to save file
-    _can_save = False   # Controls if user can use 'Save Show'
 
     def __init__(self, keyboard_parent) -> None:
-        self.keyboard = Keyboard(keyboard_parent)
         self._show = {}
+        self._path = Path()      # Path to save file
+        
+        self.keyboard = Keyboard(keyboard_parent)
+
 
     def load(self, path: PathLike):
         self._path = Path(path)
@@ -39,6 +40,7 @@ class Show:
     def new(self):
         log.info("Loading new Show")
         self._show = {}
+        self._path = Path()
         self.keyboard.new()
         log.info("Suceccfully loaded new Show")
 
@@ -94,9 +96,20 @@ class Show:
             log.debug(f"File dialog 'Open Show' closed returning '{file_path}'")
         # TODO Check filepath
         self._path = Path(file_path)
-        self._can_save = True
         self.save(**kwargs)
 
+    #  PROPERTIES
+    # ------------
+    @property
+    def _path(self) -> Path:
+        return self.__path
+    
+    @_path.setter
+    def _path(self, new: PathLike | str):
+        new = Path(new)
+        log.info(f"New save path: '{new}'")
+        self.__path = new
+        self._can_save = new.is_file()
 
 
 class ShowEncoder(json.JSONEncoder):
