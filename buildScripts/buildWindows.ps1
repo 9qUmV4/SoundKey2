@@ -6,4 +6,4 @@ pip install -r .\requirements.txt
 ./compileUi.ps1
 
 pip3 install --upgrade PyInstaller pyinstaller-hooks-contrib
-pyinstaller.exe .\SoundKey2.py
+pyinstaller.exe --add-data ".\styleSheet.css;." .\SoundKey2.py
