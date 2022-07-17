@@ -9,11 +9,10 @@ from os import PathLike
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QFileDialog
 
 from .keyboard import Keyboard
-
 
 log = logging.getLogger(__name__)
 

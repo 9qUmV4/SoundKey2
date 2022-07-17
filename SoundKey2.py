@@ -1,15 +1,13 @@
 import logging
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import PySide6
-from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtGui import QShortcut
+from PySide6.QtWidgets import QApplication, QMainWindow
 
-from core.keyboard import Keyboard
 from core.show import Show
 from ui.uic.ui_mainWindow import Ui_MainWindow
-
 
 STYLE_SHEET_PATH = Path(__name__).parent / "styleSheet.css"
 

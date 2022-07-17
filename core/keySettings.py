@@ -2,18 +2,13 @@
 # to the settings dialog of single keys
 # Author 9qUmV4
 
+import logging
 from os import PathLike
 from pathlib import Path
-from PySide6.QtWidgets import QDialog, QWidget, QFileDialog, QHBoxLayout
-from PySide6.QtCore import Slot, Signal, QUrl
-from PySide6.QtGui import QKeyEvent, QMouseEvent
-import logging
-from core.waveView import WaveChart, WaveView
-from PySide6.QtMultimedia import QAudioDecoder
 
+from PySide6.QtCore import Signal, Slot
+from PySide6.QtWidgets import QDialog, QFileDialog, QWidget
 from ui.uic.ui_keySettingsDialog import Ui_Dialog
-
-
 
 log = logging.getLogger(__name__)
 

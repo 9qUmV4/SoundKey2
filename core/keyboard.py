@@ -2,14 +2,13 @@
 import logging
 from os import PathLike
 from pathlib import Path
-from typing import overload
-from PySide6.QtWidgets import QWidget, QPushButton, QGridLayout, QFrame
+
 from PySide6.QtCore import Qt, QUrl, Signal, Slot
-from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
-from PySide6.QtGui import QMouseEvent, QShortcut, QPalette, QColor
+from PySide6.QtGui import QMouseEvent, QShortcut
+from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
+from PySide6.QtWidgets import QFrame, QGridLayout, QPushButton, QWidget
 
 from .keySettings import KeySettingsDialog
-
 
 log = logging.getLogger(__name__)
 
