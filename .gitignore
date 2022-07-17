@@ -10,3 +10,6 @@ audio_test
 *.mp3
 *.SoundKey
 classes_SoundKey2.html
+
+build
+dist

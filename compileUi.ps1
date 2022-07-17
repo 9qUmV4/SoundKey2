@@ -1,6 +1,11 @@
 
 Set-Location .\ui
 
+if (!(Test-Path .\uic))
+{
+New-Item -itemType Directory -Name uic
+}
+
 $uic_list = Get-ChildItem -Path .\*.ui -Name
 
 Write-Output "Compiling UI."
@@ -12,3 +17,5 @@ foreach ($uic in $uic_list) {
 }
 
 Write-Output "Finished!"
+
+Set-Location .\..
