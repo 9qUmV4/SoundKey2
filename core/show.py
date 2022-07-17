@@ -78,7 +78,8 @@ class Show:
             log.info(f"Saved show suceccfully")
         
         else:
-            log.error("Can not save, no save path exists")
+            log.warning("Can not save, no save path exists")
+            self.save_gui()
 
         
 
@@ -98,6 +99,7 @@ class Show:
         self._path = Path(file_path)
         self.save(**kwargs)
 
+
     #  PROPERTIES
     # ------------
     @property
@@ -109,11 +111,13 @@ class Show:
         new = Path(new)
         log.info(f"New save path: '{new}'")
         self.__path = new
-        self._can_save = new.is_file()
+        self._can_save = new.suffix == ".SoundKey"
 
 
 class ShowEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
+        if isinstance(o, Path):
+            return str(o)
         return super().default(o)
 
 

@@ -3,28 +3,50 @@ QWidget {
 }
 
 QLabel {
-    color: white;
+    color: #eeeeee;
 }
 
 QMenuBar {
-    background: rgb(51, 51, 51);
-    color: white;
+    background: #333333;
+    color: #eeeeee;
 }
 
 QMenu {
     background: #303030;
-    color: white;
+    color: #eeeeee;
 }
-
 QMenu::separator {
-    color: white;
+    color: #eeeeee;
 }
 
 QMenuBar::item:selected {
-    background: rgb(70, 70, 70);
+    background: #464646;
 }
 
 QPushButton {
-    background: rgb(70, 70, 70); 
-    color: white;
+    background: #464646; 
+    color: #eeeeee;
+    border-color: #464646;
+}
+QPushButton::checked {
+    background: #00bd0d; 
+    color: #eeeeee;
+    border-color: #00bd0d;
+}
+QPushButton[fileNotPlayable="true"] {
+    background:#333333; 
+    color: #7f7f7f;
 } 
+
+
+QLineEdit {
+    background: #464646;
+    color: #eeeeee;
+    border-color: #303030;
+}
+
+QDoubleSpinBox {
+    background: #464646;
+    color: #eeeeee;
+    border-color: #303030;
+}

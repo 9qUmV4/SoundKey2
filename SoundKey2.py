@@ -4,6 +4,7 @@ import sys
 
 import PySide6
 from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtGui import QShortcut
 
 from core.keyboard import Keyboard
 from core.show import Show
@@ -35,8 +36,6 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.loadStyleSheet()
-
         # Create Show object
         self.show_ = Show(self.ui.keyboardHolder)
 
@@ -46,12 +45,28 @@ class MainWindow(QMainWindow):
         self.ui.actionNewShow.triggered.connect(self.show_.new)
         self.ui.actionExit.triggered.connect(self.close)
 
+        shortcut_reload_stylesheet = QShortcut("F5", self)
+        shortcut_reload_stylesheet.activated.connect(self.reloadStyleSheet)
+
+    def reloadStyleSheet(self):
+        pass
+
+
+
+
+# ===============================
+#             APP
+# ===============================
+class App(QApplication):
+    def __init__(self, argv):
+        super().__init__(argv)
+        self.loadStyleSheet()
+
 
     def loadStyleSheet(self):
         log.info(f"Loading StyleSheet '{STYLE_SHEET_PATH}'")
         with STYLE_SHEET_PATH.open('r') as f_style_scheet:
             self.setStyleSheet(str(f_style_scheet.read()))
-
 
 # ===============================
 #           __MAIN__
@@ -62,11 +77,13 @@ if __name__ == "__main__":
     log.info(f"PySide version: {PySide6.__version__}")
 
     # Create Application
-    app = QApplication(sys.argv)
+    app = App(sys.argv)
 
     # Create main Window
     main_window = MainWindow()
-
     main_window.show()
 
-    sys.exit(app.exec())
+
+    exit_code = app.exec()
+    log.info(f"App closed with code {exit_code}.")
+    sys.exit(exit_code)

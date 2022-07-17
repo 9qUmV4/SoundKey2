@@ -4,10 +4,12 @@
 
 from os import PathLike
 from pathlib import Path
-from PySide6.QtWidgets import QDialog, QWidget, QFileDialog
-from PySide6.QtCore import Slot, Signal
+from PySide6.QtWidgets import QDialog, QWidget, QFileDialog, QHBoxLayout
+from PySide6.QtCore import Slot, Signal, QUrl
 from PySide6.QtGui import QKeyEvent, QMouseEvent
 import logging
+from core.waveView import WaveChart, WaveView
+from PySide6.QtMultimedia import QAudioDecoder
 
 from ui.uic.ui_keySettingsDialog import Ui_Dialog
 
@@ -22,54 +24,80 @@ class KeySettingsDialog(QDialog):
 
     # Signals
     _update_path = Signal(str)
-    dialog_accepted = Signal(Path, str)
+    dialog_accepted = Signal(str, dict)
 
 
     def __init__(
             self, 
             parent: QWidget, 
             key: str,
+            lastDir: Path,
             *,
             path: Path,
-            label: str 
+            label: str,
+            startTime: int,
+            stopTime: int,
         ) -> None:
         
         super().__init__(parent)
 
+        # self._decoder = QAudioDecoder(self)
+
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+        # layout = QHBoxLayout(self.ui.waveViewHolder)
+        # self.ui.waveView = WaveView()
+        # layout.addWidget(self.ui.waveView)
 
+        # Title
         self.setWindowTitle(f"Settings for key {key.upper()}")
-        self.setStyleSheet("""
-            QPushButton {
-                background: rgb(70, 70, 70); 
-                color: white;
-            }
-            QAbstractScrollArea {
-                border-width: 0px;
-            }
-            QLineEdit {
-                background: rgb(70, 70, 70)
-            }
-            
-        """)
+
+        # UI configuration
+        self.ui.startTimeDoubleSpinBox.setDecimals(3)
+        self.ui.startTimeDoubleSpinBox.setRange(0.0, 86400.0) # Set max to 24 h
+        self.ui.startTimeDoubleSpinBox.setSingleStep(1.0)
+        self.ui.startTimeDoubleSpinBox.setSuffix(" s")
+
+        self.ui.stopTimeDoubleSpinBox.setDecimals(3)
+        self.ui.stopTimeDoubleSpinBox.setRange(0.0, 86400.0) # Set max to 24 h
+        self.ui.stopTimeDoubleSpinBox.setSingleStep(1.0)
+        self.ui.stopTimeDoubleSpinBox.setSuffix(" s")
+        self.ui.stopTimeDoubleSpinBox.setSpecialValueText("END")
 
         self._update_path.connect(self.ui.pathDisplay.setText)
+
+        self.lastDir = lastDir
 
         self.key = key
         self.path = path
         self.label = label
+        self.startTime = startTime
+        self.stopTime = stopTime
         
         self.ui.selectFileButton.clicked.connect(self.selectFile)
         self.accepted.connect(self.dialogAccepted)
+    #     self._decoder.bufferReady.connect(self.readBuffer())
+
+
+    # def readBuffer(self):
+    #     buf = self._decoder.read()
+    #     print("Format: \t", buf.format())
+    #     print("Lenght: \t", buf.duration() * (10**-6), "s")
+    #     print("data: \t", type(buf.data()))
+    #     print("constData: \t", type(buf.constData()))
 
     
     def selectFile(self):
+        if not self.path == Path():
+            openDir = self.path.parent
+        else:
+            openDir = self.lastDir
+
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             caption="Select file to play",
-            dir=str(self.path.parent),         # TODO Implement saving last directory
-            filter="Audio Files (*.mp3);;Any (*)",
+            dir=str(openDir),
+            filter="Audio Files (*.mp3 *.wav);;Any (*)",
         )
         if file_path == "":
             log.info("File dialog 'Select file to play' canceled by user")
@@ -83,8 +111,13 @@ class KeySettingsDialog(QDialog):
     @Slot()
     def dialogAccepted(self):
         self.dialog_accepted.emit(
-            self.path,
-            self.label
+            self.key,
+            {
+                "path": self.path,
+                "label": self.label,
+                "startTime": self.startTime,
+                "stopTime": self.stopTime,
+            }
         )
         
 
@@ -104,13 +137,33 @@ class KeySettingsDialog(QDialog):
     def path(self, new_path: PathLike):
         new_path = Path(new_path)
         self._file_path = new_path
+        # self._decoder.setSource(QUrl.fromLocalFile(str(self.path)))
+        # self._decoder.start()
         self._update_path.emit(str(self._file_path))
 
 
     @property
     def label(self) -> str:
-        return self.ui.labelEdit.text()
+        return self.ui.labelLineEdit.text()
 
     @label.setter
     def label(self, new: str):
-        self.ui.labelEdit.setText(new)
+        self.ui.labelLineEdit.setText(new)
+
+
+    @property
+    def startTime(self) -> int:
+        return int(self.ui.startTimeDoubleSpinBox.value() * 1000)
+
+    @startTime.setter
+    def startTime(self, new: int):
+        self.ui.startTimeDoubleSpinBox.setValue(new / 1000)
+    
+
+    @property
+    def stopTime(self) -> int:
+        return int(self.ui.stopTimeDoubleSpinBox.value() * 1000)
+
+    @stopTime.setter
+    def stopTime(self, new: int):
+        self.ui.stopTimeDoubleSpinBox.setValue(new / 1000)
